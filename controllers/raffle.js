@@ -39,7 +39,12 @@ const getRaffleCardboard = async (req, res) => {
   res.status(StatusCodes.OK).json({ raffle });
 };
 
+const getAllRaffleCardboard = async (req, res) => {
+  const raffles = await Raffle.find({});
+  res.status(StatusCodes.OK).json({ raffles });
+};
 module.exports = {
   createRaffleCardborad,
   getRaffleCardboard,
+  getAllRaffleCardboard,
 };

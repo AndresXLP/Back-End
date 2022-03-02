@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   createRaffleCardborad,
   getRaffleCardboard,
+  getAllRaffleCardboard,
 } = require('../controllers/raffle');
 
 router
@@ -11,5 +12,6 @@ router
   .post(isAuthenticated(), createRaffleCardborad);
 
 router.route('/raffle/:id').get(getRaffleCardboard);
+router.route('/allRaffles').get(getAllRaffleCardboard);
 
 module.exports = router;
