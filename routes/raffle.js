@@ -1,4 +1,5 @@
 const { isAuthenticated } = require('../middleware/authorization');
+const multer = require('multer');
 const express = require('express');
 const router = express.Router();
 const {
@@ -6,7 +7,13 @@ const {
   getRaffleCardboard,
   getAllRaffleCardboard,
 } = require('../controllers/raffle');
+const { uploadSingleHandler } = require('../utils/upload');
 
+const upload = multer({ dest: './temp' });
+
+router
+  .route('/file/raffle')
+  .post(isAuthenticated(), upload.single('image'), uploadSingleHandler);
 router
   .route('/create-raffle-cardboard')
   .post(isAuthenticated(), createRaffleCardborad);

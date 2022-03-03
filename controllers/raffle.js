@@ -3,7 +3,7 @@ const Raffle = require('../models/raffle');
 
 const createRaffleCardborad = async (req, res) => {
   const { _id: createdBy } = req.user;
-  const { productRaffle, price, descriptionRaffle } = req.body;
+  const { productRaffle, price, descriptionRaffle, date, lottery } = req.body;
   console.log(req.body);
   const numbers = [];
   for (let i = 0; i <= 99; i++) {
@@ -19,6 +19,8 @@ const createRaffleCardborad = async (req, res) => {
   }
   const dataRaffle = {
     createdBy,
+    date,
+    lottery,
     productRaffle,
     price: new Intl.NumberFormat('es-CO', {
       style: 'currency',
