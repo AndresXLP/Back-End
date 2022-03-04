@@ -12,12 +12,9 @@ const { uploadSingleHandler } = require('../utils/upload');
 const upload = multer({ dest: './temp' });
 
 router
-  .route('/file/raffle')
-  .post(isAuthenticated(), upload.single('image'), uploadSingleHandler);
-router
-  .route('/create-raffle-cardboard')
-  .post(isAuthenticated(), createRaffleCardborad);
-
+  .route('/upload-image')
+  .post(isAuthenticated(), upload.single('dataFile'), uploadSingleHandler);
+router.route('/create-raffle').post(isAuthenticated(), createRaffleCardborad);
 router.route('/raffle/:id').get(getRaffleCardboard);
 router.route('/allRaffles').get(getAllRaffleCardboard);
 

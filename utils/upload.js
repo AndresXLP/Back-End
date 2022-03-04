@@ -1,5 +1,6 @@
 const fs = require('fs');
 const cloudinary = require('cloudinary');
+const { StatusCodes } = require('http-status-codes');
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -11,8 +12,11 @@ async function uploadSingleHandler(req, res) {
   const { file } = req;
   try {
     const result = await cloudinary.uploader.upload(file.path);
-    req.image = result.url;
-    res.status(200).json({ message: 'Imágen actualizada' });
+    console.log(
+      `🤖 ~ file: upload.js ~ line 14 ~ uploadSingleHandler ~ result`,
+      result.url
+    );
+    res.status(StatusCodes.OK).json(result.url);
   } catch (e) {
     res.status(500).json(e);
   } finally {

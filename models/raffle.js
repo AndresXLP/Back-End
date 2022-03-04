@@ -33,9 +33,11 @@ const raffleSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  date: { type: Date, required: true },
+  image: { type: String, required: true },
   productRaffle: {
     type: String,
-    required: String,
+    required: true,
   },
   price: {
     type: String,
@@ -47,6 +49,7 @@ const raffleSchema = new mongoose.Schema({
     minlength: 50,
     maxlength: 255,
   },
+  lottery: { type: String, required: true },
   numbers: [numbersRaffle],
 });
 

@@ -3,8 +3,12 @@ const Raffle = require('../models/raffle');
 
 const createRaffleCardborad = async (req, res) => {
   const { _id: createdBy } = req.user;
-  const { productRaffle, price, descriptionRaffle, date, lottery } = req.body;
-  console.log(req.body);
+  const { productRaffle, price, descriptionRaffle, date, lottery, image } =
+    req.body;
+  console.log(
+    `🤖 ~ file: raffle.js ~ line 7 ~ createRaffleCardborad ~ date`,
+    date
+  );
   const numbers = [];
   for (let i = 0; i <= 99; i++) {
     if (i.toString().length < 2) {
@@ -20,6 +24,7 @@ const createRaffleCardborad = async (req, res) => {
   const dataRaffle = {
     createdBy,
     date,
+    image,
     lottery,
     productRaffle,
     price: new Intl.NumberFormat('es-CO', {
