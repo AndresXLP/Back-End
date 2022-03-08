@@ -5,10 +5,6 @@ const createRaffleCardborad = async (req, res) => {
   const { _id: createdBy } = req.user;
   const { productRaffle, price, descriptionRaffle, date, lottery, image } =
     req.body;
-  console.log(
-    `🤖 ~ file: raffle.js ~ line 7 ~ createRaffleCardborad ~ date`,
-    date
-  );
   const numbers = [];
   for (let i = 0; i <= 99; i++) {
     if (i.toString().length < 2) {
@@ -42,16 +38,58 @@ const createRaffleCardborad = async (req, res) => {
 
 const getRaffleCardboard = async (req, res) => {
   const { id } = req.params;
-  const raffle = await Raffle.findById(id);
-  res.status(StatusCodes.OK).json({ raffle });
+  try {
+    const raffle = await Raffle.findById(id);
+    res.status(StatusCodes.OK).json({ raffle });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getAllRaffleCardboard = async (req, res) => {
   const raffles = await Raffle.find({});
   res.status(StatusCodes.OK).json({ raffles });
 };
+
+const getRaffleCreatedBy = async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const raffles = await Raffle.find({ createdBy: _id });
+    res.status(StatusCodes.OK).json(raffles);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateNumberRaffle = async (req, res) => {
+  const { id, name, lastName, email, phone, number } = req.body;
+  try {
+    const response = await Raffle.updateOne(
+      { _id: id, 'numbers.raffleNumber': number },
+      {
+        $set: {
+          'numbers.$[num].selected': true,
+          'numbers.$[num].email': email,
+          'numbers.$[num].phone': phone,
+          'numbers.$[num].name': name,
+          'numbers.$[num].lastName': lastName,
+        },
+      },
+      { arrayFilters: [{ 'num.raffleNumber': number }] }
+    );
+    if (response.matchedCount === 1) {
+      res
+        .status(StatusCodes.OK)
+        .json({ msg: 'Numero Reservado Exitosamente ✔' });
+    }
+  } catch (error) {
+    console.log(error.response);
+  }
+};
 module.exports = {
   createRaffleCardborad,
   getRaffleCardboard,
   getAllRaffleCardboard,
+  updateNumberRaffle,
+  getRaffleCreatedBy,
 };
