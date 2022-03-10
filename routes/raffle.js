@@ -8,6 +8,7 @@ const {
   getAllRaffleCardboard,
   updateNumberRaffle,
   getRaffleCreatedBy,
+  deleteRaffle,
 } = require('../controllers/raffle');
 const { uploadSingleHandler } = require('../utils/upload');
 
@@ -21,4 +22,5 @@ router.route('/raffle/createdBy').get(isAuthenticated(), getRaffleCreatedBy);
 router.route('/allRaffles').get(getAllRaffleCardboard);
 router.route('/raffle/updateNumber').put(updateNumberRaffle);
 router.route('/raffle/:id').get(getRaffleCardboard);
+router.route('/raffle/delete').delete(deleteRaffle);
 module.exports = router;

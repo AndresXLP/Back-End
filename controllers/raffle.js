@@ -62,28 +62,59 @@ const getRaffleCreatedBy = async (req, res) => {
 };
 
 const updateNumberRaffle = async (req, res) => {
-  const { id, name, lastName, email, phone, number } = req.body;
+  const { id, name, lastName, email, phone, number, payment, selected } =
+    req.body;
   try {
     const response = await Raffle.updateOne(
       { _id: id, 'numbers.raffleNumber': number },
       {
         $set: {
-          'numbers.$[num].selected': true,
+          'numbers.$[num].selected': selected,
           'numbers.$[num].email': email,
           'numbers.$[num].phone': phone,
           'numbers.$[num].name': name,
           'numbers.$[num].lastName': lastName,
+          'numbers.$[num].payment': payment || false,
         },
       },
       { arrayFilters: [{ 'num.raffleNumber': number }] }
     );
+    console.log(
+      `🤖 ~ file: raffle.js ~ line 82 ~ updateNumberRaffle ~ response`,
+      response
+    );
     if (response.matchedCount === 1) {
       res
         .status(StatusCodes.OK)
-        .json({ msg: 'Numero Reservado Exitosamente ✔' });
+        .json({ msg: 'Numero Actualizado Exitosamente ✔' });
     }
   } catch (error) {
     console.log(error.response);
+  }
+};
+const deleteRaffle = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const response = await Raffle.findById(id);
+    if (!response) {
+      res
+        .status(StatusCodes.BAD_GATEWAY)
+        .json({ msg: 'No existe una rifa con este ID' });
+      return;
+    }
+    response.numbers.map((isSelected) => {
+      if (isSelected.selected) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          msg: 'No se puede eliminar la rifa porque hay numeros reservados',
+        });
+        return;
+      }
+    });
+
+    const deletedRaffle = await Raffle.findByIdAndDelete(id);
+    res.status(StatusCodes.ACCEPTED).json({ msg: 'Rifa eliminada con exito' });
+  } catch (error) {
+    console.log(error);
   }
 };
 module.exports = {
@@ -92,4 +123,5 @@ module.exports = {
   getAllRaffleCardboard,
   updateNumberRaffle,
   getRaffleCreatedBy,
+  deleteRaffle,
 };
