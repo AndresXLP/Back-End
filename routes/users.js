@@ -17,13 +17,13 @@ const {
 // const upload = multer({ dest: "./temp" });
 
 //Ruta registro Usuario
-router.route('/useregister').post(userRegister);
+router.route('/signUp').post(userRegister);
 
 // //Ruta verificación email
 // router.route("/activate/:hash/:id").post(verifyAccount);
 
 //Ruta login user/collaborator
-router.route('/sessionlogin').post(userLogin);
+router.route('/signIn').post(userLogin);
 
 // //Ruta carga imágenes user/collaborator
 // router
