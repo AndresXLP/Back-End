@@ -16,10 +16,6 @@ const isAuthenticated = (req, res, next) => {
   return compose().use(async (req, res, next) => {
     const authHeader = req.headers.authorization;
     try {
-      console.log(
-        `🤖 ~ file: authorization.js ~ line 19 ~ returncompose ~ req.headers`,
-        req.headers
-      );
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(500).json({ msg: 'No Token provided' });
       }
