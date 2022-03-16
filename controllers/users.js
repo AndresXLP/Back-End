@@ -1,7 +1,8 @@
 const get = require('lodash/get');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
-const { emailExist } = require('../utils/emailCompare');
+// const Collaborator = require('../models/collaborator');
+// const { emailExist } = require('../utils/emailCompare');
 const { StatusCodes } = require('http-status-codes');
 // const { BadRequestError, UnauthenticatedError } = require('../errors');
 // const { sendEmailSendGrid } = require('../utils/send_email');
@@ -11,14 +12,16 @@ const crypto = require('crypto');
 
 const userRegister = async (req, res) => {
   const { name, email, password, lastName } = req.body;
-  console.log(req.body);
+  // if (!name || !email || !password || !lastName) {
+  //   throw new BadRequestError('Please provide name, lastname, email,password');
+  // }
 
-  if (await emailExist(email)) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
-      msg: 'Already Exist',
-    });
-    return;
-  }
+  // if (await emailExist(email)) {
+  //   res.status(StatusCodes.UNAUTHORIZED).json({
+  //     msg: 'Email ya se encuentra registrado',
+  //   });
+  //   return;
+  // }
 
   const newUser = req.body;
   // const hash = crypto.createHash('sha256').update(newUser.email).digest('hex');
@@ -35,7 +38,7 @@ const userRegister = async (req, res) => {
   //   },
   // };
   // sendEmailSendGrid(emailSend);
-  res.status(StatusCodes.CREATED).json({ msg: 'Success' });
+  res.status(StatusCodes.CREATED).json({ user });
 };
 
 // const updateUser = async (user, data) => {
@@ -109,7 +112,6 @@ const userLogin = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     res.status(StatusCodes.UNAUTHORIZED).json({
-      status: 'unregistered',
       msg: 'Email no esta registrado',
     });
     return;
@@ -124,20 +126,12 @@ const userLogin = async (req, res) => {
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
       res.status(StatusCodes.UNAUTHORIZED).json({
-        status: 'wrong',
         msg: 'Email o Contraseña Invalidos',
       });
       return;
     }
     const token = user.createJWT(req.body);
-    res
-      .status(StatusCodes.OK)
-      .json({
-        status: 'logged',
-        msg: 'Inicio de Session Correcto',
-        user,
-        token,
-      });
+    res.status(StatusCodes.OK).json({ user, token });
     return;
   }
 };

@@ -16,14 +16,14 @@ const numbersRaffle = new mongoose.Schema(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'Please provide a valid email',
       ],
+      default: 'example@rifalo.com',
     },
     phone: {
       type: Number,
       minlength: 10,
       maxlength: 10,
+      default: 300000000,
     },
-    name: { type: String },
-    lastName: { type: String },
   },
   { _id: false }
 );
@@ -33,11 +33,9 @@ const raffleSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  date: { type: Date, required: true },
-  image: { type: String, required: true },
   productRaffle: {
     type: String,
-    required: true,
+    required: String,
   },
   price: {
     type: String,
@@ -46,10 +44,9 @@ const raffleSchema = new mongoose.Schema({
   descriptionRaffle: {
     type: String,
     required: true,
-    minlength: 25,
+    minlength: 50,
     maxlength: 255,
   },
-  lottery: { type: String, required: true },
   numbers: [numbersRaffle],
 });
 
