@@ -14,9 +14,9 @@ async function uploadSingleHandler(req, res) {
     const result = await cloudinary.uploader.upload(file.path);
     console.log(
       `🤖 ~ file: upload.js ~ line 14 ~ uploadSingleHandler ~ result`,
-      result.url
+      result
     );
-    res.status(StatusCodes.OK).json(result.url);
+    res.status(StatusCodes.OK).json(result.public_id);
   } catch (e) {
     res.status(500).json(e);
   } finally {

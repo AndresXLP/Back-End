@@ -46,7 +46,7 @@ const raffleSchema = new mongoose.Schema({
   descriptionRaffle: {
     type: String,
     required: true,
-    minlength: 50,
+    minlength: 25,
     maxlength: 255,
   },
   lottery: { type: String, required: true },

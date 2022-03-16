@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const raffle = require('../models/raffle');
 const Raffle = require('../models/raffle');
 
 const createRaffleCardborad = async (req, res) => {
@@ -40,7 +41,11 @@ const getRaffleCardboard = async (req, res) => {
   const { id } = req.params;
   try {
     const raffle = await Raffle.findById(id);
-    res.status(StatusCodes.OK).json({ raffle });
+    if (!raffle) {
+      res.status(StatusCodes.BAD_REQUEST).json({ status: 'Not Found' });
+      return;
+    }
+    res.status(StatusCodes.OK).json({ status: 'ok', raffle });
   } catch (error) {
     console.log(error);
   }
@@ -48,14 +53,22 @@ const getRaffleCardboard = async (req, res) => {
 
 const getAllRaffleCardboard = async (req, res) => {
   const raffles = await Raffle.find({});
-  res.status(StatusCodes.OK).json({ raffles });
+  if (!raffles.length) {
+    res.status(StatusCodes.BAD_REQUEST).json({ status: 'Not Found' });
+    return;
+  }
+  res.status(StatusCodes.OK).json({ status: 'ok', raffles });
 };
 
 const getRaffleCreatedBy = async (req, res) => {
   const { _id } = req.user;
   try {
     const raffles = await Raffle.find({ createdBy: _id });
-    res.status(StatusCodes.OK).json(raffles);
+    if (!raffles.length) {
+      res.status(StatusCodes.BAD_REQUEST).json({ status: 'Not Found' });
+      return;
+    }
+    res.status(StatusCodes.OK).json({ status: 'ok', raffles });
   } catch (error) {
     console.log(error);
   }
@@ -79,10 +92,6 @@ const updateNumberRaffle = async (req, res) => {
       },
       { arrayFilters: [{ 'num.raffleNumber': number }] }
     );
-    console.log(
-      `🤖 ~ file: raffle.js ~ line 82 ~ updateNumberRaffle ~ response`,
-      response
-    );
     if (response.matchedCount === 1) {
       res
         .status(StatusCodes.OK)
@@ -93,26 +102,28 @@ const updateNumberRaffle = async (req, res) => {
   }
 };
 const deleteRaffle = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
+  let isSelected = false;
   try {
     const response = await Raffle.findById(id);
     if (!response) {
-      res
-        .status(StatusCodes.BAD_GATEWAY)
-        .json({ msg: 'No existe una rifa con este ID' });
+      res.status(StatusCodes.BAD_GATEWAY).json({ status: 'Not Found' });
       return;
     }
-    response.numbers.map((isSelected) => {
-      if (isSelected.selected) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          msg: 'No se puede eliminar la rifa porque hay numeros reservados',
-        });
-        return;
-      }
+    response.numbers.map((number) => {
+      number.selected && (isSelected = true);
+      return isSelected;
     });
-
-    const deletedRaffle = await Raffle.findByIdAndDelete(id);
-    res.status(StatusCodes.ACCEPTED).json({ msg: 'Rifa eliminada con exito' });
+    if (isSelected) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        status: 'Do not Delete',
+      });
+      return;
+    } else {
+      await Raffle.findByIdAndDelete(id);
+      res.status(StatusCodes.ACCEPTED).json({ status: 'Deleted' });
+      return;
+    }
   } catch (error) {
     console.log(error);
   }
