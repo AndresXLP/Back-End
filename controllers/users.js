@@ -58,7 +58,6 @@ const userLogin = async (req, res) => {
     return;
   }
 };
-
 module.exports = {
   userRegister,
   userLogin,
