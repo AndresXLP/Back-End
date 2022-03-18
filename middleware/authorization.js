@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const compose = require('composable-middleware');
+const { StatusCodes } = require('http-status-codes');
 
 const getUserbyEmail = async (email) => {
   try {
@@ -16,10 +17,6 @@ const isAuthenticated = (req, res, next) => {
   return compose().use(async (req, res, next) => {
     const authHeader = req.headers.authorization;
     try {
-      console.log(
-        `🤖 ~ file: authorization.js ~ line 19 ~ returncompose ~ req.headers`,
-        req.headers
-      );
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(500).json({ msg: 'No Token provided' });
       }
@@ -34,7 +31,7 @@ const isAuthenticated = (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.log(error);
+      return res.status(StatusCodes.UNAUTHORIZED).json(error.message);
     }
   });
 };
