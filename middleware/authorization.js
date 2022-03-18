@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const compose = require('composable-middleware');
+const { StatusCodes } = require('http-status-codes');
 
 const getUserbyEmail = async (email) => {
   try {
@@ -30,7 +31,7 @@ const isAuthenticated = (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.log(error);
+      return res.status(StatusCodes.UNAUTHORIZED).json(error.message);
     }
   });
 };

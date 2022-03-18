@@ -10,7 +10,7 @@ const crypto = require('crypto');
 //Creación de usuario
 
 const userRegister = async (req, res) => {
-  const { name, email, password, lastName } = req.body;
+  const { email } = req.body;
   if (await emailExist(email)) {
     res.status(StatusCodes.UNAUTHORIZED).json({
       msg: 'Already Exist',
@@ -19,9 +19,10 @@ const userRegister = async (req, res) => {
   }
 
   const newUser = req.body;
-  const user = await User.create(newUser);
+  await User.create(newUser);
   res.status(StatusCodes.CREATED).json({ msg: 'Success' });
 };
+
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
