@@ -1,6 +1,5 @@
-const { StatusCodes } = require('http-status-codes');
-const raffle = require('../models/raffle');
-const Raffle = require('../models/raffle');
+import { StatusCodes }from'http-status-codes'
+import Raffle from '../models/raffle.js'
 
 const createRaffleCardborad = async (req, res) => {
   const { _id: createdBy } = req.user;
@@ -128,7 +127,7 @@ const deleteRaffle = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = {
+export {
   createRaffleCardborad,
   getRaffleCardboard,
   getAllRaffleCardboard,

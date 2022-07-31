@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,13 +17,20 @@ const userSchema = new mongoose.Schema(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'Please provide a valid email',
       ],
-      unique: true,
     },
     password: { type: String, required: [true, 'Password is required'] },
     phone: { type: Number, minlength: 10, maxlength: 10 },
   },
 
   { timestamps: true }
+);
+
+//Index and Unique field in UserSchema
+userSchema.index(
+  { email: 1 },
+  {
+    unique: true,
+  }
 );
 
 //Encriptación password
@@ -42,4 +49,5 @@ userSchema.methods.comparePassword = async function (passwordCheck) {
   return isMatch;
 };
 
-module.exports = mongoose.model('User', userSchema);
+
+export default mongoose.model('User', userSchema);

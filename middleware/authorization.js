@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/users');
-const compose = require('composable-middleware');
-const { StatusCodes } = require('http-status-codes');
+import compose from 'composable-middleware'
+import jwt from 'jsonwebtoken'
+import { StatusCodes } from 'http-status-codes';
+import User from '../models/users.js'
+
 
 const getUserbyEmail = async (email) => {
   try {
@@ -36,4 +37,4 @@ const isAuthenticated = (req, res, next) => {
   });
 };
 
-module.exports = { isAuthenticated, getUserbyEmail };
+export { isAuthenticated, getUserbyEmail };
