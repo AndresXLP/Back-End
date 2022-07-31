@@ -1,16 +1,16 @@
-const { isAuthenticated } = require('../middleware/authorization');
-const multer = require('multer');
-const express = require('express');
+import { isAuthenticated } from '../middleware/authorization.js'
+import multer from 'multer';
+import express from 'express'
 const router = express.Router();
-const {
+import {
   createRaffleCardborad,
   getRaffleCardboard,
   getAllRaffleCardboard,
   updateNumberRaffle,
   getRaffleCreatedBy,
   deleteRaffle,
-} = require('../controllers/raffle');
-const { uploadSingleHandler } = require('../utils/upload');
+} from '../controllers/raffle.js'
+import { uploadSingleHandler }from'../utils/upload.js'
 
 const upload = multer({ dest: './temp' });
 
@@ -23,4 +23,5 @@ router.route('/allRaffles').get(getAllRaffleCardboard);
 router.route('/raffle/updateNumber').put(updateNumberRaffle);
 router.route('/raffle/:id').get(getRaffleCardboard);
 router.route('/raffle/delete/:id').delete(isAuthenticated(), deleteRaffle);
-module.exports = router;
+
+export default router

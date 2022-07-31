@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 const numbersRaffle = new mongoose.Schema(
   {
@@ -53,4 +53,4 @@ const raffleSchema = new mongoose.Schema({
   numbers: [numbersRaffle],
 });
 
-module.exports = mongoose.model('Raffle', raffleSchema);
+export default mongoose.model('Raffle', raffleSchema);

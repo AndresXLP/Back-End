@@ -1,6 +1,6 @@
-const fs = require('fs');
-const cloudinary = require('cloudinary');
-const { StatusCodes } = require('http-status-codes');
+import cloudinary from 'cloudinary'
+import fs from 'fs'
+import { StatusCodes } from 'http-status-codes';
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -20,4 +20,4 @@ async function uploadSingleHandler(req, res) {
   }
 }
 
-module.exports = { uploadSingleHandler };
+export {uploadSingleHandler} 
